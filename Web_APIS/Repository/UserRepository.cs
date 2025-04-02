@@ -21,15 +21,13 @@ namespace Web_APIS.Repository
             string Sql = "SELECT * FROM tbl_users";
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
-                await con.OpenAsync();  // Open connection asynchronously
-
+                await con.OpenAsync();  
                 using (SqlCommand cmd = new SqlCommand(Sql, con))
                 {
-                    using (SqlDataReader dr = await cmd.ExecuteReaderAsync())  // Execute command asynchronously
+                    using (SqlDataReader dr = await cmd.ExecuteReaderAsync()) 
                     {
                         List<tbl_users> users = new List<tbl_users>();
 
-                        // Read asynchronously
                         while (await dr.ReadAsync())
                         {
                             tbl_users user = new tbl_users
@@ -41,7 +39,6 @@ namespace Web_APIS.Repository
                             };
                             users.Add(user);
                         }
-
                         return users;
                     }
                 }
