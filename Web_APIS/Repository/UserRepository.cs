@@ -1,10 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Web_APIS.Models;
 
@@ -16,30 +13,38 @@ namespace Web_APIS.Repository
         public string _connectionString = null;
         public UserRepository(IConfiguration configuration)
         {
-                _configurationSystem = configuration;
+             _configurationSystem = configuration;
             _connectionString = _configurationSystem.GetConnectionString("MyCon");
         }
-        public List<tbl_users> GetUsers()
+        public async Task<List<tbl_users>> GetUsersAsync()
         {
             string Sql = "SELECT * FROM tbl_users";
-            using (SqlConnection con= new SqlConnection(_connectionString))
+            using (SqlConnection con = new SqlConnection(_connectionString))
             {
-                con.Open();
-               using (SqlCommand cmd = new SqlCommand(Sql, con))
+                await con.OpenAsync();  // Open connection asynchronously
+
+                using (SqlCommand cmd = new SqlCommand(Sql, con))
                 {
-                    SqlDataReader dr = cmd.ExecuteReader();
-                    List<tbl_users> users = new List<tbl_users>();
-                    while (dr.Read())
+                    using (SqlDataReader dr = await cmd.ExecuteReaderAsync())  // Execute command asynchronously
                     {
-                        tbl_users user = new tbl_users();
-                        user.id = Convert.ToInt32(dr["id"]);
-                        user.username = dr["username"].ToString();
-                        user.password = dr["password"].ToString();
-                        user.email = dr["email"].ToString();
-                        users.Add(user);
+                        List<tbl_users> users = new List<tbl_users>();
+
+                        // Read asynchronously
+                        while (await dr.ReadAsync())
+                        {
+                            tbl_users user = new tbl_users
+                            {
+                                id = Convert.ToInt32(dr["id"]),
+                                username = dr["username"].ToString(),
+                                password = dr["password"].ToString(),
+                                email = dr["email"].ToString()
+                            };
+                            users.Add(user);
+                        }
+
+                        return users;
                     }
-                    return users;
-                }   
+                }
             }
         }
 

@@ -1,8 +1,5 @@
 ﻿using DLL.Services.Interface;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Web_APIS.Models;
 using Web_APIS.Repository;
@@ -17,16 +14,16 @@ namespace DLL.Services.Implementation
         {
                 _userRepository = userRepository;
         }
-        public List<tbl_users> GetUsers()
+        public async Task<List<tbl_users>> GetUsers()
         {
-            _userRepository.GetUsers();
-            if (_userRepository.GetUsers() == null)
+            _userRepository.GetUsersAsync();
+            if (_userRepository.GetUsersAsync() == null)
             {
                 return null;
             }
             else
             {
-                return _userRepository.GetUsers();
+                return await _userRepository.GetUsersAsync();
             }
         }
     }
