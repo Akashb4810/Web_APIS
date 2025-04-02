@@ -1,5 +1,4 @@
 ﻿using DLL.Services.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WEB_API.Controllers
@@ -15,9 +14,9 @@ namespace WEB_API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetUsers()
+        public async Task<IActionResult> GetUsers()
         {
-            var users = _userServices.GetUsers();
+            var users = await _userServices.GetUsers();
             if (users == null)
             {
                 return NotFound();
