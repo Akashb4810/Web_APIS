@@ -39,7 +39,7 @@ namespace DLL.Services.Implementation
             return await _userRepository.InsertUserAsync(userModel);
         }
 
-        public async Task<bool> Login(string username, string password)
+        public async Task<LoginResponse> Login(string username, string password)
         {
             return await _userRepository.Login(username,password);
         }
