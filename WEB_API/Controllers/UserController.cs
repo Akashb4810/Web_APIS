@@ -1,5 +1,7 @@
 ﻿using DLL.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Text;
 using Web_APIS.Models;
 
 namespace WEB_API.Controllers
@@ -9,9 +11,11 @@ namespace WEB_API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserServices _userServices;
-        public UserController(IUserServices userServices)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public UserController(IUserServices userServices, IHttpContextAccessor httpContextAccessor)
         {
             _userServices = userServices;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet("GetUsers")]
@@ -28,41 +32,28 @@ namespace WEB_API.Controllers
         [HttpPost("InsertUser")]
         public async Task<IActionResult> InsertUser([FromBody] tbl_users user)
         {
-            try
-            {
-                bool isInserted = await _userServices.InsertUserAsync(user);
+            bool isInserted = await _userServices.InsertUserAsync(user);
 
-                if (!isInserted)
-                {
-                    return BadRequest("User not inserted");
-                }
-
-                return Ok("User inserted successfully");
-            }
-            catch (Exception ex)
+            if (!isInserted)
             {
-                throw ex;
+                return BadRequest("User not inserted");
             }
+
+            return Ok("User inserted successfully");
+
         }
 
         [HttpPost("LogIn")]
         public async Task<IActionResult> LogIn(string username,string password)
         {
-            try
-            {
-                bool isInserted = await _userServices.Login(username,password);
+            var response = await _userServices.Login(username, password);
 
-                if (!isInserted)
-                {
-                    return BadRequest("Invalid UserName Or Password");
-                }
-
-                return Ok("User LoggedIn Successfully");
-            }
-            catch (Exception ex)
+            if (response == null)
             {
-                throw ex;
+                return BadRequest("Invalid UserName Or Password");
             }
+
+            return Ok(new { message = "User Logged In Successfully", Data = response });
         }
 
         [HttpGet("GetConnetionByLabId")]
@@ -75,5 +66,26 @@ namespace WEB_API.Controllers
             }
             return Ok(users);
         }
+
+        [HttpGet("get-login-info")]
+        public IActionResult GetLoginInfo()
+        {
+            var session = _httpContextAccessor.HttpContext.Session;  
+            byte[] responseBytes = Web_APIS.Models.SessionExtensions.Get(session, "LoginResponse"); 
+
+            if (responseBytes != null)
+            {
+                var jsonResponse = Encoding.UTF8.GetString(responseBytes);
+                var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(jsonResponse);
+
+                return Ok(loginResponse);
+            }
+            else
+            {
+                return NotFound("No login data in session.");
+            }
+        }
+
     }
 }
+

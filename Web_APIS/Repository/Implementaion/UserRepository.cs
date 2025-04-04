@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
@@ -17,10 +18,13 @@ namespace Web_APIS.Repository
     {
         private readonly IConfiguration _configurationSystem;
         public string _connectionString = null;
-        public UserRepository(IConfiguration configuration)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public UserRepository(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
              _configurationSystem = configuration;
             _connectionString = _configurationSystem.GetConnectionString("MyCon");
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<List<tbl_users>> GetUsersAsync()
         {
@@ -38,7 +42,6 @@ namespace Web_APIS.Repository
                 }
             }
         }
-
 
         public async Task<bool> InsertUserAsync(tbl_users userModel)
         {
@@ -69,7 +72,6 @@ namespace Web_APIS.Repository
                 }
             }
         }
-
         public async Task<tbl_users> GetUserByUserName(string username)
         {
             var parameters = new DynamicParameters();
@@ -95,7 +97,6 @@ namespace Web_APIS.Repository
                 }
             }
         }
-
         public async Task<string> GetConnetionByLabId(Guid LabId)
         {
             var parameters = new DynamicParameters();
@@ -118,7 +119,6 @@ namespace Web_APIS.Repository
                 }
             }
         }
-
         private string HashPassword(string password)
         {
             using (var sha256 = SHA256.Create())
@@ -135,11 +135,36 @@ namespace Web_APIS.Repository
             return hashedEnteredPassword == storedHash;
         }
 
-        public async Task<bool> Login(string username, string password)
+        public async Task<LoginResponse> Login(string username, string password)
         {
+            try
+            {
+                tbl_users user = await GetUserByUserName(username);
+                bool isValid = CheckPassword(password, user.Password);
+                if (isValid)
+                {
+                    var response = new LoginResponse()
+                    {
+                        Emailid = user.Emailid,
+                        MobileNumber = user.MobileNumber,
+                        LABID = user.LABID.ToString(),
+                        Connection = await GetConnetionByLabId(user.LABID)
 
-            tbl_users user = await GetUserByUserName(username);
-            return CheckPassword(password, user.Password);
+                    };
+                    var responseBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(response));
+
+                    var session = _httpContextAccessor.HttpContext.Session;
+                    session.Set("LoginResponse", responseBytes);
+                    return response;
+                }
+                else { return null; }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+            
+
         }
     }
 }
