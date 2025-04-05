@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Web_APIS.Models;
 
-namespace DLL.Services.Interface
+namespace Web_APIS.Repository
 {
-    public interface IUserServices
+    public interface IUserRepository
     {
-        Task<List<tbl_users>> GetUsers();
+        Task<List<tbl_users>> GetUsersAsync();
         Task<bool> InsertUserAsync(tbl_users userModel);
         Task<LoginResponse> Login(string username, string password);
         Task<string> GetConnetionByLabId(Guid LabId);
+        Task<LoginResponse> GetSessionDetails();
     }
 }

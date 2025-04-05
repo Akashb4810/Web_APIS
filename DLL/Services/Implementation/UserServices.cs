@@ -1,4 +1,5 @@
 ﻿using DLL.Services.Interface;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Web_APIS.Models;
@@ -14,6 +15,12 @@ namespace DLL.Services.Implementation
         {
                 _userRepository = userRepository;
         }
+
+        public async Task<string> GetConnetionByLabId(Guid LabId)
+        {
+            return await _userRepository.GetConnetionByLabId(LabId);
+        }
+
         public async Task<List<tbl_users>> GetUsers()
         {
             _userRepository.GetUsersAsync();
@@ -25,6 +32,16 @@ namespace DLL.Services.Implementation
             {
                 return await _userRepository.GetUsersAsync();
             }
+        }
+
+        public async Task<bool> InsertUserAsync(tbl_users userModel)
+        {
+            return await _userRepository.InsertUserAsync(userModel);
+        }
+
+        public async Task<LoginResponse> Login(string username, string password)
+        {
+            return await _userRepository.Login(username,password);
         }
     }
 }
