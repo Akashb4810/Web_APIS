@@ -12,6 +12,6 @@ namespace Web_APIS.Models
         public long? MobileNumber { get; set; }
         public string Emailid { get; set; }
         public string Connection { get; set; }
-
+        public Guid GlobalUID { get; set; }
     }
 }

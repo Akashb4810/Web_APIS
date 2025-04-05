@@ -11,5 +11,6 @@ namespace Web_APIS.Repository
         Task<bool> InsertUserAsync(tbl_users userModel);
         Task<LoginResponse> Login(string username, string password);
         Task<string> GetConnetionByLabId(Guid LabId);
+        Task<LoginResponse> GetSessionDetails();
     }
 }
