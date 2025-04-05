@@ -30,11 +30,14 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICollectionCenterRepository, CollectionCenterRepository>();
+builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
 
 
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<ICollectionCenterService, CollectionCenterService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<IDoctorServices, DoctorServices>();
+
 
 var app = builder.Build();
 
