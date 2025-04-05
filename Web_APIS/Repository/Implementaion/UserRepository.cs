@@ -148,8 +148,8 @@ namespace Web_APIS.Repository
                         Emailid = user.Emailid,
                         MobileNumber = user.MobileNumber,
                         LABID = user.LABID.ToString(),
-                        Connection = await GetConnetionByLabId(user.LABID)
-
+                        Connection = await GetConnetionByLabId(user.LABID),
+                        GlobalUID = user.GlobalUID,
                     };
                     var responseBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(response));
 
@@ -163,8 +163,28 @@ namespace Web_APIS.Repository
             {
                 throw ex;
             }
-            
 
+        }
+
+        public async Task<LoginResponse> GetSessionDetails()
+        {
+            try
+            {
+                var session = _httpContextAccessor.HttpContext.Session;
+                byte[] responseBytes = Web_APIS.Models.SessionExtensions.Get(session, "LoginResponse");
+
+                if (responseBytes != null)
+                {
+                    var jsonResponse = Encoding.UTF8.GetString(responseBytes);
+                    var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(jsonResponse);
+                    return loginResponse;
+                }
+                else { return null; }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

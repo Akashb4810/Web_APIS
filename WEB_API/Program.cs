@@ -1,6 +1,8 @@
 using DLL.Services.Implementation;
 using DLL.Services.Interface;
 using Web_APIS.Repository;
+using Web_APIS.Repository.Implementaion;
+using Web_APIS.Repository.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +29,11 @@ builder.Services.AddSession(options =>
 });
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICollectionCenterRepository, CollectionCenterRepository>();
+
+
 builder.Services.AddScoped<IUserServices, UserServices>();
+builder.Services.AddScoped<ICollectionCenterService, CollectionCenterService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();
