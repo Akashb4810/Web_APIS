@@ -36,6 +36,9 @@ builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<ICollectionCenterService, CollectionCenterService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+builder.Services.AddScoped<IPatientServices, PatientServices>();
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+
 var app = builder.Build();
 
 app.UseCors("AllowAll");

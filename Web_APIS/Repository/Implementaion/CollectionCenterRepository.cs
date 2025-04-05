@@ -14,27 +14,21 @@ namespace Web_APIS.Repository.Implementaion
 {
     public class CollectionCenterRepository : ICollectionCenterRepository
     {
-        private readonly IConfiguration _configurationSystem;
         private readonly IUserRepository _userRepository;
         private static LoginResponse sessionDetails;
         public string _connectionString = null;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CollectionCenterRepository(IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
+        public CollectionCenterRepository(IUserRepository userRepository)
         {
-            _configurationSystem = configuration;
-            _httpContextAccessor = httpContextAccessor;
             _userRepository = userRepository;
             sessionDetails = _userRepository.GetSessionDetails().Result;
         }
 
         public async Task<List<CollectionCenter>> GetCenterDetails(int? centerID)
         {
-            _connectionString = _userRepository.GetSessionDetails().Result.Connection;
-
             var parameters = new DynamicParameters();
             parameters.Add("@CenterID", centerID);
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlConnection con = new SqlConnection(sessionDetails.Connection))
             {
                 try
                 {
@@ -51,8 +45,6 @@ namespace Web_APIS.Repository.Implementaion
 
         public async Task<bool> InsertUpdateCenterAsync(CollectionCenter collectionCenter)
         {
-            _connectionString = _userRepository.GetSessionDetails().Result.Connection;
-
             var parameters = new DynamicParameters();
             parameters.Add("@CenterID", collectionCenter.CenterID);
             parameters.Add("@CenterName", collectionCenter.CenterName);
@@ -77,7 +69,7 @@ namespace Web_APIS.Repository.Implementaion
 
             parameters.Add("@ErrorMessage", dbType: DbType.String, direction: ParameterDirection.Output, size: 200);  // For error message
 
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlConnection con = new SqlConnection(sessionDetails.Connection))
             {
                 try
                 {
@@ -99,12 +91,10 @@ namespace Web_APIS.Repository.Implementaion
 
         public async Task<bool> DeleteCenterAsync(int centerID)
         {
-            _connectionString = _userRepository.GetSessionDetails().Result.Connection;
-
             var parameters = new DynamicParameters();
             parameters.Add("@CenterID", centerID);
 
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlConnection con = new SqlConnection(sessionDetails.Connection))
             {
                 try
                 {
