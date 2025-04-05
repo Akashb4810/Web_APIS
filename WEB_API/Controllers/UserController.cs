@@ -21,70 +21,192 @@ namespace WEB_API.Controllers
         [HttpGet("GetUsers")]
         public async Task<IActionResult> GetUsers()
         {
-            var users = await _userServices.GetUsers();
-            if (users == null)
+            try
             {
-                return NotFound();
+                var users = await _userServices.GetUsers();
+
+                if (users == null || !users.Any())
+                {
+                    return NotFound(new
+                    {
+                        StatusCode = 404,
+                        Message = "No users found",
+                        Data = (object)null
+                    });
+                }
+
+                return Ok(new
+                {
+                    StatusCode = 200,
+                    Message = "Users retrieved successfully",
+                    Data = users
+                });
             }
-            return Ok(users);
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    StatusCode = 500,
+                    Message = "An unexpected error occurred while retrieving users",
+                    Error = ex.Message
+                });
+            }
         }
+
 
         [HttpPost("InsertUser")]
         public async Task<IActionResult> InsertUser([FromBody] tbl_users user)
         {
-            bool isInserted = await _userServices.InsertUserAsync(user);
-
-            if (!isInserted)
+            try
             {
-                return BadRequest("User not inserted");
+                bool isInserted = await _userServices.InsertUserAsync(user);
+
+                if (!isInserted)
+                {
+                    return BadRequest(new
+                    {
+                        StatusCode = 400,
+                        Message = "User insertion failed",
+                        Data = (object)null
+                    });
+                }
+
+                return Ok(new
+                {
+                    StatusCode = 200,
+                    Message = "User inserted successfully",
+                    Data = user // or return the newly created user with ID if available
+                });
             }
-
-            return Ok("User inserted successfully");
-
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    StatusCode = 500,
+                    Message = "An error occurred while inserting the user",
+                    Error = ex.Message,
+                    Data = (object)null
+                });
+            }
         }
+
 
         [HttpPost("LogIn")]
-        public async Task<IActionResult> LogIn(string username,string password)
+        public async Task<IActionResult> LogIn(string username, string password)
         {
-            var response = await _userServices.Login(username, password);
-
-            if (response == null)
+            try
             {
-                return BadRequest("Invalid UserName Or Password");
-            }
+                var response = await _userServices.Login(username, password);
 
-            return Ok(new { message = "User Logged In Successfully", Data = response });
+                if (response == null)
+                {
+                    return BadRequest(new
+                    {
+                        StatusCode = 400,
+                        Message = "Invalid Username or Password",
+                        Data = (object)null
+                    });
+                }
+
+                return Ok(new
+                {
+                    StatusCode = 200,
+                    Message = "User Logged In Successfully",
+                    Data = response
+                });
+            }
+            catch (Exception ex)
+            {
+                // Optionally, log the exception here
+                return StatusCode(500, new
+                {
+                    StatusCode = 500,
+                    Message = "An unexpected error occurred.",
+                    Error = ex.Message
+                });
+            }
         }
+
 
         [HttpGet("GetConnetionByLabId")]
         public async Task<IActionResult> GetConnetionByLabId(Guid LabId)
         {
-            var users = await _userServices.GetConnetionByLabId(LabId);
-            if (users == null)
+            try
             {
-                return NotFound();
+                var users = await _userServices.GetConnetionByLabId(LabId);
+
+                if (users == null || !users.Any())
+                {
+                    return NotFound(new
+                    {
+                        StatusCode = 404,
+                        Message = $"No users found for Lab ID: {LabId}",
+                        Data = (object)null
+                    });
+                }
+
+                return Ok(new
+                {
+                    StatusCode = 200,
+                    Message = "Users retrieved successfully",
+                    Data = users
+                });
             }
-            return Ok(users);
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    StatusCode = 500,
+                    Message = "An error occurred while fetching users by Lab ID",
+                    Error = ex.Message,
+                    Data = (object)null
+                });
+            }
         }
+
 
         [HttpGet("get-login-info")]
         public IActionResult GetLoginInfo()
         {
-            var session = _httpContextAccessor.HttpContext.Session;  
-            byte[] responseBytes = Web_APIS.Models.SessionExtensions.Get(session, "LoginResponse"); 
-
-            if (responseBytes != null)
+            try
             {
-                var jsonResponse = Encoding.UTF8.GetString(responseBytes);
-                var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(jsonResponse);
+                var session = _httpContextAccessor.HttpContext.Session;
+                byte[] responseBytes = Web_APIS.Models.SessionExtensions.Get(session, "LoginResponse");
 
-                return Ok(loginResponse);
+                if (responseBytes != null)
+                {
+                    var jsonResponse = Encoding.UTF8.GetString(responseBytes);
+                    var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(jsonResponse);
+
+                    return Ok(new
+                    {
+                        StatusCode = 200,
+                        Message = "Login data retrieved from session",
+                        Data = loginResponse
+                    });
+                }
+                else
+                {
+                    return NotFound(new
+                    {
+                        StatusCode = 404,
+                        Message = "No login data found in session",
+                        Data = (object)null
+                    });
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return NotFound("No login data in session.");
+                return StatusCode(500, new
+                {
+                    StatusCode = 500,
+                    Message = "An error occurred while retrieving login info",
+                    Error = ex.Message,
+                    Data = (object)null
+                });
             }
         }
+
 
     }
 }
