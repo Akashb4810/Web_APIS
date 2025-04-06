@@ -155,13 +155,16 @@
     <Compile Include="Models\CollectionCenter.cs" />
     <Compile Include="Models\DoctorClass.cs" />
     <Compile Include="Models\LoginResponse.cs" />
+    <Compile Include="Models\PatientType.cs" />
     <Compile Include="Models\SessionExtensions.cs" />
     <Compile Include="Models\tbl_users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\Implementaion\CollectionCenterRepository.cs" />
     <Compile Include="Repository\Implementaion\DoctorRepository.cs" />
+    <Compile Include="Repository\Implementaion\PatientRepository.cs" />
     <Compile Include="Repository\Interface\ICollectionCenterRepository.cs" />
     <Compile Include="Repository\Interface\IDoctorRepository.cs" />
+    <Compile Include="Repository\Interface\IPatientRepository.cs" />
     <Compile Include="Repository\Interface\IUserRepository.cs" />
     <Compile Include="Repository\Implementaion\UserRepository.cs" />
   </ItemGroup>
