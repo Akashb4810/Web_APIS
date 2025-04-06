@@ -45,10 +45,12 @@
     <Compile Include="Services\Implementation\CollectionCenterService.cs" />
     <Compile Include="Services\Implementation\DoctorServices.cs" />
     <Compile Include="Services\Implementation\PatientServices.cs" />
+    <Compile Include="Services\Implementation\TestServices.cs" />
     <Compile Include="Services\Implementation\UserServices.cs" />
     <Compile Include="Services\Interface\ICollectionCenterService.cs" />
     <Compile Include="Services\Interface\IDoctorServices.cs" />
     <Compile Include="Services\Interface\IPatientServices.cs" />
+    <Compile Include="Services\Interface\ITestService.cs" />
     <Compile Include="Services\Interface\IUserServices.cs" />
   </ItemGroup>
   <ItemGroup>
