@@ -157,9 +157,11 @@
     <Compile Include="Models\DoctorClass.cs" />
     <Compile Include="Models\LoginResponse.cs" />
     <Compile Include="Models\PatientType.cs" />
+    <Compile Include="Models\ReportFormatType.cs" />
     <Compile Include="Models\SampleType.cs" />
     <Compile Include="Models\SessionExtensions.cs" />
     <Compile Include="Models\tbl_users.cs" />
+    <Compile Include="Models\Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\Implementaion\CollectionCenterRepository.cs" />
     <Compile Include="Repository\Implementaion\DoctorRepository.cs" />

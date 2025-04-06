@@ -36,5 +36,44 @@ namespace DLL.Services.Implementation
         {
             return await _testRepository.GetSampleType(sampleTypeId);
         }
+
+        public async Task<bool> DeleteDepartmentType(int departmentTypeId)
+        {
+            return await _testRepository.DeleteDepartmentType(departmentTypeId);
+        }
+        public async Task<bool> DeleteSampleType(int sampleTypeId)
+        {
+            return await _testRepository.DeleteSampleType(sampleTypeId);
+        }
+
+        public async Task<bool> InsertReportFormatTypeAsync(ReportFormatType reportFormatType)
+        {
+            return await _testRepository.InsertUpdateRoportFormatTypeAsync(reportFormatType);
+        }
+
+        public async Task<List<ReportFormatType>> GetReportFormatType(int? sampleTypeId)
+        {
+            return await _testRepository.GetReportFormatType(sampleTypeId);
+        }
+
+        public async Task<bool> DeleteReportFormatType(int departmentTypeId)
+        {
+            return await _testRepository.DeleteReportFormatType(departmentTypeId);
+        }
+
+        public async Task<Dictionary<bool, string>> InsertUpdateTestAsync(Test test)
+        {
+            return await _testRepository.InsertUpdateTestAsync(test);
+        }
+
+        public async Task<List<Test>> GetTestAsync(int? testID)
+        {
+            return await _testRepository.GetTestAsync(testID);
+        }
+
+        public async Task<bool> DeleteTestAsync(int testID)
+        {
+            return await _testRepository.DeleteTestAsync(testID);
+        }
     }
 }
