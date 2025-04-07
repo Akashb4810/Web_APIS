@@ -9,9 +9,11 @@ namespace WEB_API.Controllers
     public class CollectionCenterController : ControllerBase
     {
         private readonly ICollectionCenterService _collectionCenterService;
-        public CollectionCenterController(ICollectionCenterService collectionCenterService)
+        private readonly ILogExceptionService _logExceptionService;
+        public CollectionCenterController(ICollectionCenterService collectionCenterService, ILogExceptionService logExceptionService)
         {
             _collectionCenterService = collectionCenterService;
+            _logExceptionService = logExceptionService;
         }
 
         [HttpGet("GetCenterDetails")]
@@ -28,6 +30,7 @@ namespace WEB_API.Controllers
             }
             catch (Exception ex)
             {
+                await _logExceptionService.InsertLog(ex.Message, DateTime.Now, "0");
                 return StatusCode(500, new { StatusCode = 500, Message = "An unexpected error occurred while retrieving centers", Error = ex.Message });
             }
         }
@@ -44,6 +47,7 @@ namespace WEB_API.Controllers
             }
             catch (Exception ex)
             {
+
                 return StatusCode(500, new { StatusCode = 500, Message = "An error occurred while inserting the user", Error = ex.Message });
             }
         }
