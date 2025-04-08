@@ -41,8 +41,11 @@ builder.Services.AddScoped<IDoctorServices, DoctorServices>();
 builder.Services.AddScoped<IPatientServices, PatientServices>();
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 
-builder.Services.AddScoped<ITestRepository, TestRepository>();
 builder.Services.AddScoped<ITestService, TestServices>();
+builder.Services.AddScoped<ITestRepository, TestRepository>();
+
+builder.Services.AddScoped<IRateServices, RateServices>();
+builder.Services.AddScoped<IRateRepository, RateRepository>();
 
 
 
