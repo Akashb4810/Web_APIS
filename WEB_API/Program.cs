@@ -44,6 +44,9 @@ builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<ITestService, TestServices>();
 builder.Services.AddScoped<ITestRepository, TestRepository>();
 
+builder.Services.AddScoped<IRateServices, RateServices>();
+builder.Services.AddScoped<IRateRepository, RateRepository>();
+
 builder.Services.AddScoped<ILogExceptionService, LogExceptionService>();
 builder.Services.AddScoped<ILogExceptionRepository, LogExceptionRepository>();
 
